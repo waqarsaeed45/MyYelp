@@ -2,6 +2,7 @@ package compioneerx1.httpsgithub.myrestaurants;
 
 import static junit.framework.Assert.assertTrue;
 
+import android.content.Intent;
 import android.os.Build;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
 
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -29,5 +31,14 @@ public class MainActivityTest {
     public void validateTextViewContent() {
         TextView appNameTextView = (TextView) activity.findViewById(R.id.appNameTextView);
         assertTrue("MyRestaurants".equals(appNameTextView.getText().toString()));
+    }
+
+    @Test
+    public void secondActivityStarted() {
+        activity.findViewById(R.id.findRestaurantsButton).performClick();
+        Intent expectedIntent = new Intent(activity, RestaurantsActivity.class);
+        ShadowActivity shadowActivity = org.robolectric.Shadows.shadowOf(activity);
+        Intent actualIntent = shadowActivity.getNextStartedActivity();
+        assertTrue(actualIntent.filterEquals(expectedIntent));
     }
 }
