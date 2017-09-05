@@ -3,6 +3,7 @@ package compioneerx1.httpsgithub.myrestaurants;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,8 @@ public class RestaurantsActivity extends AppCompatActivity {
 
     @Bind(R.id.locationTextView) TextView mLocationTextView;
     @Bind(R.id.listView) ListView mListView;
+
+    public static final String TAG = RestaurantsActivity.class.getSimpleName();
 
 //    private TextView mLocationTextView;
 //    private ListView mListView;
@@ -44,11 +47,13 @@ public class RestaurantsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String restaurant = ((TextView)view).getText().toString();
                 Toast.makeText(RestaurantsActivity.this, restaurant, Toast.LENGTH_LONG).show();
+                //Log.v(TAG, "IN THE ONITEMCLICKLISTENER!");
             }
         });
 
         Intent intent = getIntent();
         String location = intent.getStringExtra("location");
         mLocationTextView.setText("Here are all the restaurants near: " + location);
+        //Log.d(TAG, "IN THE ONCREATE METHOD");
     }
 }
