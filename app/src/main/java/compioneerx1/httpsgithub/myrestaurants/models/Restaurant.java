@@ -1,4 +1,4 @@
-package compioneerx1.httpsgithub.myrestaurants;
+package compioneerx1.httpsgithub.myrestaurants.models;
 
 import java.util.ArrayList;
 

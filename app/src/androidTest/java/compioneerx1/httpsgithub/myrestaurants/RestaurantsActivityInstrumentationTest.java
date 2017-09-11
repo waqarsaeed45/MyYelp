@@ -7,6 +7,8 @@ import android.view.View;
 import org.junit.Rule;
 import org.junit.Test;
 
+import compioneerx1.httpsgithub.myrestaurants.ui.RestaurantsActivity;
+
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

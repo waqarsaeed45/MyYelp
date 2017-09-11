@@ -1,4 +1,4 @@
-package compioneerx1.httpsgithub.myrestaurants;
+package compioneerx1.httpsgithub.myrestaurants.services;
 
 
 import org.json.JSONArray;
@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import compioneerx1.httpsgithub.myrestaurants.Constants;
+import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
