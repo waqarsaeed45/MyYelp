@@ -44,6 +44,7 @@ android {
         it.buildConfigField 'String', 'YELP_TOKEN_SECRET', YelpTokenSecret
     }
 }
+apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -63,10 +64,9 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     compile 'org.parceler:parceler-api:1.1.6'
     compile 'com.google.firebase:firebase-database:9.2.1'
-    annotationProcessor 'org.parceler:parceler:1.1.6'
+    apt 'org.parceler:parceler:1.1.6'
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'
 }
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.neenbedankt.android-apt'
