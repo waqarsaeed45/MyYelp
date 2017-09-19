@@ -1,5 +1,6 @@
 package compioneerx1.httpsgithub.myrestaurants.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import compioneerx1.httpsgithub.myrestaurants.R;
 public class CreateAccountActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = CreateAccountActivity.class.getSimpleName();
 
+    private ProgressDialog mAuthProgressDialog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -44,6 +46,17 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         mLoginTextView.setOnClickListener(this);
         mCreateUserButton.setOnClickListener(this);
         createAuthStateListener();
+
+        createAuthProgressDialog();
+    }
+
+
+
+    private void createAuthProgressDialog() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading...");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
     }
 
     @Override
@@ -82,12 +95,21 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
+        boolean validEmail = isValidEmail(email);
+        boolean validName = isValidName(name);
+        boolean validPassword = isValidPassword(password, confirmPassword);
+        if (!validEmail || !validName || !validPassword) return;
+
+        mAuthProgressDialog.show();
+
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "Authentication successful");
+                    Toast.makeText(CreateAccountActivity.this, "Authentication successful.",
+                            Toast.LENGTH_SHORT).show();
                 }   else {
                          Toast.makeText(CreateAccountActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
@@ -112,5 +134,34 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
             }
 
         };
+    }
+
+    private boolean isValidEmail(String email) {
+        boolean isGoodEmail =
+                (email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        if (!isGoodEmail) {
+            mEmailEditText.setError("Please enter a valid email address");
+            return false;
+        }
+        return isGoodEmail;
+    }
+
+    private boolean isValidName(String name) {
+        if (name.equals("")) {
+            mNameEditText.setError("Please enter your name");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPassword(String password, String confirmPassword) {
+        if (password.length() < 6) {
+            mPasswordEditText.setError("Please create a password containing at least 6 characters");
+            return false;
+        } else if (!password.equals(confirmPassword)) {
+            mPasswordEditText.setError("Passwords do not match");
+            return false;
+        }
+        return true;
     }
 }
