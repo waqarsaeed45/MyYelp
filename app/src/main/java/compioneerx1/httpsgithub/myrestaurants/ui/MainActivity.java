@@ -24,49 +24,18 @@ import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String TAG = MainActivity.class.getSimpleName();
-
-    // private SharedPreferences mSharedPreferences;
-   // private SharedPreferences.Editor mEditor;
-    private DatabaseReference mSearchedLocationReference;
-    private ValueEventListener mSearchedLocationReferenceListener;
+    //public static final String TAG = MainActivity.class.getSimpleName();
 
 
     @Bind(R.id.findRestaurantsButton) Button mFindRestaurantsButton;
-    @Bind(R.id.locationEditText) EditText mLocationEditText;
     @Bind(R.id.appNameTextView) TextView mAppNameTextView;
     @Bind(R.id.savedRestaurantsButton) Button mSavedRestaurantsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        mSearchedLocationReference = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child(Constants.FIREBASE_CHILD_SEARCHED_LOCATION);
-
-        mSearchedLocationReferenceListener = mSearchedLocationReference.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) { //something changed!
-                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
-                    String location = locationSnapshot.getValue().toString();
-                    Log.d("Locations updated", "location: " + location); //log
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) { //update UI here if error occurred.
-
-            }
-        });
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-       // mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-       // mEditor = mSharedPreferences.edit();
 
         Typeface ostrichFont = Typeface.createFromAsset(getAssets(), "fonts/ostrichregular.ttf");
         mAppNameTextView.setTypeface(ostrichFont);
@@ -75,17 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSavedRestaurantsButton.setOnClickListener(this);
     }
 
-    @Override
+
+     @Override
     public void onClick(View v) {
         if (v == mFindRestaurantsButton) {
-            String location = mLocationEditText.getText().toString();
-
-            saveLocationToFirebase(location);
-//            if(!(location).equals("")) {
-//                addToSharedPreferences(location);
-//            }
             Intent intent = new Intent(MainActivity.this, RestaurantListActivity.class);
-            intent.putExtra("location", location);
             startActivity(intent);
         }
         if (v == mSavedRestaurantsButton) {
@@ -93,16 +56,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
     }
-//    private void addToSharedPreferences(String location) {
-//        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
-//    }
 
-    public void saveLocationToFirebase(String location) {
-        mSearchedLocationReference.push().setValue(location);
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSearchedLocationReference.removeEventListener(mSearchedLocationReferenceListener);
-    }
 }
