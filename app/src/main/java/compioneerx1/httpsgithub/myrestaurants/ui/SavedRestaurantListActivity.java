@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,12 +16,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
+import compioneerx1.httpsgithub.myrestaurants.adapters.FirebaseRestaurantListAdapter;
 import compioneerx1.httpsgithub.myrestaurants.adapters.FirebaseRestaurantViewHolder;
 import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
+import compioneerx1.httpsgithub.myrestaurants.util.OnStartDragListener;
+import compioneerx1.httpsgithub.myrestaurants.util.SimpleItemTouchHelperCallback;
 
-public class SavedRestaurantListActivity extends AppCompatActivity {
+public class SavedRestaurantListActivity extends AppCompatActivity implements OnStartDragListener {
+
     private DatabaseReference mRestaurantReference;
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
+    private FirebaseRestaurantListAdapter mFirebaseAdapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
 
@@ -31,6 +37,10 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants);
         ButterKnife.bind(this);
 
+        setUpFirebaseAdapter();
+    }
+
+    private void setUpFirebaseAdapter() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
 
@@ -38,28 +48,29 @@ public class SavedRestaurantListActivity extends AppCompatActivity {
                 .getInstance()
                 .getReference(Constants.FIREBASE_CHILD_RESTAURANTS)
                 .child(uid);
-        setUpFirebaseAdapter();
-    }
 
-    private void setUpFirebaseAdapter() {
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Restaurant, FirebaseRestaurantViewHolder>
-                (Restaurant.class, R.layout.restaurant_list_item_drag, FirebaseRestaurantViewHolder.class,
-                        mRestaurantReference) {
+        mFirebaseAdapter = new FirebaseRestaurantListAdapter(Restaurant.class, R.layout.restaurant_list_item_drag, FirebaseRestaurantViewHolder.class,
+                        mRestaurantReference, this, this);
 
-            @Override
-            protected void populateViewHolder(FirebaseRestaurantViewHolder viewHolder,
-                                              Restaurant model, int position) {
-                viewHolder.bindRestaurant(model);
-            }
-        };
+
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mFirebaseAdapter);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mFirebaseAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mFirebaseAdapter.cleanup();
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
     }
 }
