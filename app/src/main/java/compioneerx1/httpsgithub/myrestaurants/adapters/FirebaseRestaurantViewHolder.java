@@ -3,6 +3,7 @@ package compioneerx1.httpsgithub.myrestaurants.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,8 +23,9 @@ import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
 import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 import compioneerx1.httpsgithub.myrestaurants.ui.RestaurantDetailActivity;
+import compioneerx1.httpsgithub.myrestaurants.util.ItemTouchHelperViewHolder;
 
-public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder {
+public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
     private static final int MAX_WIDTH = 200;
     private static final int MAX_HEIGHT = 200;
 
@@ -55,4 +57,20 @@ public class FirebaseRestaurantViewHolder extends RecyclerView.ViewHolder {
         ratingTextView.setText("Rating: " + restaurant.getRating() + "/5");
     }
 
+    @Override
+    public void onItemSelected() {
+        itemView.animate()
+                .alpha(0.7f)
+                .scaleX(0.9f)
+                .scaleY(0.9f)
+                .setDuration(500);
+    }
+
+    @Override
+    public void onItemClear() {
+        itemView.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f);
+    }
   }
