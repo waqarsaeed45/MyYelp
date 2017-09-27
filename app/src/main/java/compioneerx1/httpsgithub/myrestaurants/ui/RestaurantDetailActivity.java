@@ -16,6 +16,7 @@ import compioneerx1.httpsgithub.myrestaurants.adapters.RestaurantPagerAdapter;
 import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
+    private String mSource;
 
     @Bind(R.id.viewPager) ViewPager mViewPager;
     private RestaurantPagerAdapter adapterViewPager;
@@ -28,9 +29,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mRestaurants = Parcels.unwrap(getIntent().getParcelableExtra(Constants.EXTRA_KEY_RESTAURANTS));
+        mSource = getIntent().getStringExtra(Constants.KEY_SOURCE);
         int startingPosition =getIntent().getIntExtra(Constants.EXTRA_KEY_POSITION, 0);
 
-        adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants);
+        adapterViewPager = new RestaurantPagerAdapter(getSupportFragmentManager(), mRestaurants, mSource);
         mViewPager.setAdapter(adapterViewPager);
         mViewPager.setCurrentItem(startingPosition);
 
