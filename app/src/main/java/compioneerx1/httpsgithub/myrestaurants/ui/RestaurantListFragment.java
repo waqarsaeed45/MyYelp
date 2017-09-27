@@ -1,6 +1,7 @@
 package compioneerx1.httpsgithub.myrestaurants.ui;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,6 +27,7 @@ import compioneerx1.httpsgithub.myrestaurants.R;
 import compioneerx1.httpsgithub.myrestaurants.adapters.RestaurantListAdapter;
 import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 import compioneerx1.httpsgithub.myrestaurants.services.YelpService;
+import compioneerx1.httpsgithub.myrestaurants.util.OnRestaurantSelectedListener;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -34,14 +36,24 @@ import okhttp3.Response;
  * A simple {@link Fragment} subclass.
  */
 public class RestaurantListFragment extends Fragment {
-    @Bind(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    @Bind(R.id.recyclerView) RecyclerView mRecyclerView;
 
     private RestaurantListAdapter mAdapter;
     public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private String mRecentAddress;
+    private OnRestaurantSelectedListener mOnRestaurantSelectedListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnRestaurantSelectedListener = (OnRestaurantSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + e.getMessage());
+        }
+    }
 
     public RestaurantListFragment() {
         // Required empty public constructor
@@ -107,7 +119,7 @@ public class RestaurantListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getRestaurants(String location) {
+    private void getRestaurants(String location) {
         final YelpService yelpService = new YelpService();
 
         yelpService.findRestaurants(location, new Callback() {
@@ -122,23 +134,12 @@ public class RestaurantListFragment extends Fragment {
                 mRestaurants = yelpService.processResults(response);
 
                 getActivity().runOnUiThread(new Runnable() {
-                    // Line above states 'getActivity()' instead of previous 'RestaurantListActivity.this'
-                    // because fragments do not have own context, and must inherit from corresponding activity.
 
                     @Override
                     public void run() {
-                        mAdapter = new RestaurantListAdapter(getActivity(), mRestaurants);
-                        // Line above states `getActivity()` instead of previous
-                        // 'getApplicationContext()' because fragments do not have own context,
-                        // must instead inherit it from corresponding activity.
-
+                        mAdapter = new RestaurantListAdapter(getActivity(), mRestaurants, mOnRestaurantSelectedListener);
                         mRecyclerView.setAdapter(mAdapter);
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                        // Line above states 'new LinearLayoutManager(getActivity());' instead of previous
-                        // 'new LinearLayoutManager(RestaurantListActivity.this);' when method resided
-                        // in RestaurantListActivity because Fragments do not have context
-                        // and must instead inherit from corresponding activity.
-
                         mRecyclerView.setLayoutManager(layoutManager);
                         mRecyclerView.setHasFixedSize(true);
                     }
