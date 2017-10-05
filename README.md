@@ -6,6 +6,9 @@ Android Project
 ## Description
 _MyYelp is and android application that allows users to discover their local favorites. An Yelp API is used to suggest the list of restaurants near the given location_
 
+## Screenshot
+<img src="https://github.com/SowmyaLogaswamy/MyYelp/blob/master/screenshots/main_activity.png" alt="Mainpage" width= "200px"/>
+
 ## Planning
 
 ### Specs
