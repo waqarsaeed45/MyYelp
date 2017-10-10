@@ -86,7 +86,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     private void createNewUser() {
         mName = mNameEditText.getText().toString().trim();
 
-        final String name = mNameEditText.getText().toString().trim();
         final String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
@@ -110,11 +109,11 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Authentication successful");
-                            Toast.makeText(CreateAccountActivity.this, "Authentication successful.",
+                            Toast.makeText(CreateAccountActivity.this, "Created successful.",
                                     Toast.LENGTH_SHORT).show();
                             createFirebaseUserProfile(task.getResult().getUser());
                         }   else {
-                            Toast.makeText(CreateAccountActivity.this, "Authentication failed.",
+                            Toast.makeText(CreateAccountActivity.this, "Account creation failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
