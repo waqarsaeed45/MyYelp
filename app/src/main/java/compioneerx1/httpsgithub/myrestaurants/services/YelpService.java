@@ -22,18 +22,14 @@ import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 public class YelpService {
 
     public static void findRestaurants(String location, Callback callback) {
-        OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(Constants.YELP_CONSUMER_KEY, Constants.YELP_CONSUMER_SECRET);
-        consumer.setTokenWithSecret(Constants.YELP_TOKEN, Constants.YELP_TOKEN_SECRET);
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new SigningInterceptor(consumer))
-                .build();
+        OkHttpClient client = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL).newBuilder();
-        urlBuilder.addQueryParameter(Constants.YELP_LOCATION_QUERY_PARAMETER, location);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
+                .header("Authorization", "Bearer " + Constants.YELP_CONSUMER_KEY)
                 .url(url)
                 .build();
 
@@ -57,10 +53,15 @@ public class YelpService {
                     String website = restaurantJSON.getString("url");
                     double rating = restaurantJSON.getDouble("rating");
                     String imageUrl = restaurantJSON.getString("image_url");
-                    double latitude = restaurantJSON.getJSONObject("location")
-                            .getJSONObject("coordinate").getDouble("latitude");
-                    double longitude = restaurantJSON.getJSONObject("location")
-                            .getJSONObject("coordinate").getDouble("longitude");
+
+                    double latitude = (restaurantJSON.getJSONObject("location").has("coordinate")) ? restaurantJSON.getJSONObject("location")
+                            .getJSONObject("coordinate").getDouble("latitude") : -1;
+
+                    double longitude =
+                            (restaurantJSON.getJSONObject("location").has("coordinate")) ? restaurantJSON.getJSONObject("location")
+                                    .getJSONObject("coordinate").getDouble("longitude") : -1;
+
+
                     ArrayList<String> address = new ArrayList<>();
                     JSONArray addressJSON = restaurantJSON.getJSONObject("location")
                             .getJSONArray("display_address");
@@ -72,7 +73,7 @@ public class YelpService {
                     JSONArray categoriesJSON = restaurantJSON.getJSONArray("categories");
 
                     for (int y = 0; y < categoriesJSON.length(); y++) {
-                        categories.add(categoriesJSON.getJSONArray(y).get(0).toString());
+                        categories.add(categoriesJSON.getJSONObject(y).toString());
                     }
                     Restaurant restaurant = new Restaurant(name, phone, website, rating, imageUrl, address, latitude, longitude, categories);
                     restaurants.add(restaurant);

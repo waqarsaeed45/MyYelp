@@ -4,14 +4,16 @@ package compioneerx1.httpsgithub.myrestaurants.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -19,7 +21,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
@@ -29,8 +31,8 @@ import compioneerx1.httpsgithub.myrestaurants.ui.RestaurantDetailFragment;
 import compioneerx1.httpsgithub.myrestaurants.util.OnRestaurantSelectedListener;
 
 public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.RestaurantViewHolder> {
-    private static final int MAX_WIDTH = 200;
-    private static final int MAX_HEIGHT = 200;
+    private static final int MAX_WIDTH = 130;
+    private static final int MAX_HEIGHT = 130;
 
 
     private ArrayList<Restaurant> mRestaurants = new ArrayList<>();
@@ -61,10 +63,18 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
     }
 
     public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @Bind(R.id.restaurantImageView) ImageView mRestaurantImageView;
-        @Bind(R.id.restaurantNameTextView) TextView mNameTextView;
-        @Bind(R.id.categoryTextView) TextView mCategoryTextView;
-        @Bind(R.id.ratingTextView) TextView mRatingTextView;
+        @BindView(R.id.restaurantImageView)
+        ImageView mRestaurantImageView;
+        @BindView(R.id.restaurantNameTextView)
+        TextView mNameTextView;
+        @BindView(R.id.categoryTextView)
+        TextView mCategoryTextView;
+        @BindView(R.id.ratingTextView)
+        RatingBar mRatingTextView;
+        @BindView(R.id.phoneNumberTextView)
+        TextView mPhoneNumberTextView;
+        @BindView(R.id.addressTextView)
+        TextView mAddressTextView;
 
         private Context mContext;
         private int mOrientation;
@@ -88,14 +98,18 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         }
 
         public void bindRestaurant(Restaurant restaurant) {
+
+            String imageUrl = addChar(restaurant.getImageUrl(), '/',restaurant.getImageUrl().length()-5);
             Picasso.with(mContext)
-                    .load(restaurant.getImageUrl())
+                    .load(imageUrl)
                     .resize(MAX_WIDTH, MAX_HEIGHT)
                     .centerCrop()
                     .into(mRestaurantImageView);
             mNameTextView.setText(restaurant.getName());
             mCategoryTextView.setText(restaurant.getCategories().get(0));
-            mRatingTextView.setText("Rating: " + restaurant.getRating() + "/5");
+            mRatingTextView.setRating(Float.parseFloat(String.valueOf(restaurant.getRating())));
+            mPhoneNumberTextView.setText(restaurant.getPhone());
+            mAddressTextView.setText(restaurant.getAddress().toString());
         }
 
         @Override
@@ -113,13 +127,17 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             }
         }
 
-        private void createDetailFragment(int position){
+        private void createDetailFragment(int position) {
             RestaurantDetailFragment detailFragment = RestaurantDetailFragment.newInstance(mRestaurants, position, Constants.SOURCE_FIND);
             FragmentTransaction ft = ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.restaurantDetailContainer, detailFragment);
             ft.commit();
         }
 
+    }
+
+    public String addChar(String str, char ch, int position) {
+        return str.substring(0, position) + ch + str.substring(position);
     }
 
 }

@@ -38,16 +38,18 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="bold" />
 
-            <TextView
+            <RatingBar
+                android:id="@+id/ratingTextView"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4.5/5"
-                android:id="@+id/ratingTextView"
                 android:layout_alignTop="@+id/restaurantNameTextView"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.1" />
+
 
             <TextView
                 android:layout_width="wrap_content"

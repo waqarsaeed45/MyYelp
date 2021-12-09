@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    compileSdkVersion 25
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 30
+    buildToolsVersion "29.0.2"
 
     repositories {
         mavenCentral()
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "compioneerx1.httpsgithub.myrestaurants"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -43,34 +43,41 @@ android {
         it.buildConfigField 'String', 'YELP_TOKEN', YelpToken
         it.buildConfigField 'String', 'YELP_TOKEN_SECRET', YelpTokenSecret
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
-apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile('com.android.support.test:runner:0.3') {
+    androidTestImplementation('com.android.support.test:runner:0.3') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'se.akerfeldt:okhttp-signpost:1.1.0'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'org.parceler:parceler-api:1.1.6'
-    compile 'com.google.firebase:firebase-database:9.0.2'
-    compile 'com.firebaseui:firebase-ui-database:0.4.1'
-    compile 'com.google.firebase:firebase-auth:9.0.2'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.0'
-    testCompile 'org.robolectric:shadows-support-v4:3.0'
-    apt 'org.parceler:parceler:1.1.6'
+    implementation("androidx.appcompat:appcompat: 1.4.0")
+
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
+    implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+   // implementation 'androidx.support:support-v4:26.1.0'
+    implementation 'org.parceler:parceler-api:1.1.6'
+    implementation 'com.google.firebase:firebase-database:9.0.2'
+    implementation 'com.firebaseui:firebase-ui-database:0.4.1'
+    implementation 'com.google.firebase:firebase-auth:9.0.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.0'
+    testImplementation 'org.robolectric:shadows-support-v4:3.0'
+    testImplementation 'org.parceler:parceler:1.1.6'
+
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }
 apply plugin: 'com.google.gms.google-services'

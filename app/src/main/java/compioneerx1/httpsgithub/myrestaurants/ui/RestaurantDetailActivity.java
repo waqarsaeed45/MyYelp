@@ -1,14 +1,15 @@
 package compioneerx1.httpsgithub.myrestaurants.ui;
 
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
@@ -18,7 +19,8 @@ import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 public class RestaurantDetailActivity extends AppCompatActivity {
     private String mSource;
 
-    @Bind(R.id.viewPager) ViewPager mViewPager;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
     private RestaurantPagerAdapter adapterViewPager;
     ArrayList<Restaurant> mRestaurants = new ArrayList<>();
 

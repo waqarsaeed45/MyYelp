@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants.iml" filepath="$PROJECT_DIR$/MyRestaurants.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2.iml" filepath="$PROJECT_DIR$/MyRestaurants2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2.iml" filepath="$PROJECT_DIR$/MyRestaurants2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" filepath="$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" filepath="$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" filepath="$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" filepath="$PROJECT_DIR$/MyRestaurants2-android-firebase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyYelp.iml" filepath="$PROJECT_DIR$/MyYelp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyYelpJava.iml" filepath="$PROJECT_DIR$/.idea/modules/MyYelpJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MyYelpJava.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MyYelpJava.app.iml" />
     </modules>
   </component>
 </project>

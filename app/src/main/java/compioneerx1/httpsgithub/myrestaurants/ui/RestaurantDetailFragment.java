@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,8 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
@@ -41,20 +43,28 @@ import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RestaurantDetailFragment extends Fragment implements View.OnClickListener{
+public class RestaurantDetailFragment extends Fragment implements View.OnClickListener {
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
     private static final int REQUEST_IMAGE_CAPTURE = 111;
 
-    @Bind(R.id.restaurantImageView) ImageView mImageLabel;
-    @Bind(R.id.restaurantNameTextView) TextView mNameLabel;
-    @Bind(R.id.cuisineTextView) TextView mCategoriesLabel;
-    @Bind(R.id.ratingTextView) TextView mRatingLabel;
-    @Bind(R.id.websiteTextView) TextView mWebsiteLabel;
-    @Bind(R.id.phoneTextView) TextView mPhoneLabel;
-    @Bind(R.id.addressTextView) TextView mAddressLabel;
-    @Bind(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
+    @BindView(R.id.restaurantImageView)
+    ImageView mImageLabel;
+    @BindView(R.id.restaurantNameTextView)
+    TextView mNameLabel;
+    @BindView(R.id.cuisineTextView)
+    TextView mCategoriesLabel;
+    @BindView(R.id.ratingTextView)
+    RatingBar mRatingLabel;
+    @BindView(R.id.websiteTextView)
+    TextView mWebsiteLabel;
+    @BindView(R.id.phoneTextView)
+    TextView mPhoneLabel;
+    @BindView(R.id.addressTextView)
+    TextView mAddressLabel;
+    @BindView(R.id.saveRestaurantButton)
+    TextView mSaveRestaurantButton;
 
     private Restaurant mRestaurant;
     private ArrayList<Restaurant> mRestaurants;
@@ -165,7 +175,7 @@ public class RestaurantDetailFragment extends Fragment implements View.OnClickLi
 
         mNameLabel.setText(mRestaurant.getName());
         mCategoriesLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getCategories()));
-        mRatingLabel.setText(Double.toString(mRestaurant.getRating()) + "/5");
+        mRatingLabel.setRating(Integer.parseInt(String.valueOf(mRestaurant.getRating())));
         mPhoneLabel.setText(mRestaurant.getPhone());
         mAddressLabel.setText(android.text.TextUtils.join(", ", mRestaurant.getAddress()));
 
