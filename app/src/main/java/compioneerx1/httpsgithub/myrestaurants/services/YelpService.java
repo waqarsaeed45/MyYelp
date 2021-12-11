@@ -21,11 +21,12 @@ import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
 public class YelpService {
 
-    public static void findRestaurants(String location, Callback callback) {
+    public static void findRestaurants(String category, Callback callback) {
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL).newBuilder();
+        urlBuilder.addQueryParameter("categories",category);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -53,6 +54,7 @@ public class YelpService {
                     String website = restaurantJSON.getString("url");
                     double rating = restaurantJSON.getDouble("rating");
                     String imageUrl = restaurantJSON.getString("image_url");
+                    String price = restaurantJSON.getString("price");
 
                     double latitude = (restaurantJSON.getJSONObject("location").has("coordinate")) ? restaurantJSON.getJSONObject("location")
                             .getJSONObject("coordinate").getDouble("latitude") : -1;
@@ -73,9 +75,9 @@ public class YelpService {
                     JSONArray categoriesJSON = restaurantJSON.getJSONArray("categories");
 
                     for (int y = 0; y < categoriesJSON.length(); y++) {
-                        categories.add(categoriesJSON.getJSONObject(y).toString());
+                        categories.add(categoriesJSON.getJSONObject(y).getString("title"));
                     }
-                    Restaurant restaurant = new Restaurant(name, phone, website, rating, imageUrl, address, latitude, longitude, categories);
+                    Restaurant restaurant = new Restaurant(name, phone, website, rating, imageUrl, price, address, latitude, longitude, categories);
                     restaurants.add(restaurant);
                 }
             }

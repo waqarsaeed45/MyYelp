@@ -14,7 +14,6 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 
-import compioneerx1.httpsgithub.myrestaurants.ui.MainActivity;
 import compioneerx1.httpsgithub.myrestaurants.ui.RestaurantListActivity;
 
 

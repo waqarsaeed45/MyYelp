@@ -37,19 +37,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildTypes.each {
-        it.buildConfigField 'String', 'YELP_CONSUMER_KEY', YelpConsumerKey
-        it.buildConfigField 'String', 'YELP_CONSUMER_SECRET', YelpConsumerSecret
-        it.buildConfigField 'String', 'YELP_TOKEN', YelpToken
-        it.buildConfigField 'String', 'YELP_TOKEN_SECRET', YelpTokenSecret
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-//apply plugin: 'com.neenbedankt.android-apt'
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -67,11 +60,7 @@ dependencies {
     implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
     implementation 'androidx.recyclerview:recyclerview'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-   // implementation 'androidx.support:support-v4:26.1.0'
     implementation 'org.parceler:parceler-api:1.1.6'
-    implementation 'com.google.firebase:firebase-database:9.0.2'
-    implementation 'com.firebaseui:firebase-ui-database:0.4.1'
-    implementation 'com.google.firebase:firebase-auth:9.0.2'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.0'
     testImplementation 'org.robolectric:shadows-support-v4:3.0'
@@ -79,5 +68,10 @@ dependencies {
 
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+
+    //Nav drawer
+    implementation 'com.google.android.material:material:1.0.0'
+
+    implementation 'com.ajts.androidmads.SQLite2Excel:library:1.0.2'
 }
 apply plugin: 'com.google.gms.google-services'

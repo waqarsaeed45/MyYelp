@@ -12,6 +12,7 @@ public class Restaurant {
     String website;
     double rating;
     String imageUrl;
+    String price;
     List<String> address = new ArrayList<>();
     double latitude;
     double longitude;
@@ -20,17 +21,19 @@ public class Restaurant {
     String index;
 
 
-    public Restaurant() { }
+    public Restaurant() {
+    }
 
-    public Restaurant(String name , String phone, String website, double rating,
-                      String imageUrl, ArrayList<String> address, double latitude,
-                      double longitude, ArrayList<String> categories)
-    {
+    public Restaurant(String name, String phone, String website, double rating,
+                      String imageUrl, String price, ArrayList<String> address, double latitude,
+                      double longitude, ArrayList<String> categories) {
         this.name = name;
         this.phone = phone;
         this.website = website;
         this.rating = rating;
-        this.imageUrl = getLargeImageUrl(imageUrl);
+        //this.imageUrl = getLargeImageUrl(imageUrl);
+        this.imageUrl = imageUrl;
+        this.price = price;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,6 +46,14 @@ public class Restaurant {
         return largeImageUrl;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getName() {
         return name;
     }
@@ -52,14 +63,14 @@ public class Restaurant {
     }
 
     public String getWebsite() {
-        return  website;
+        return website;
     }
 
     public double getRating() {
         return rating;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return imageUrl;
     }
 

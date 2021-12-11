@@ -4,16 +4,22 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/texfield_searchview_holo_light.xml" value="0.16944444444444445" />
+        <entry key="app/src/main/res/layout-land/activity_restaurants.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout-land/fragment_restaurant_detail.xml" value="0.2734375" />
-        <entry key="app/src/main/res/layout-land/restaurant_list_item.xml" value="0.39791666666666664" />
+        <entry key="app/src/main/res/layout-land/restaurant_list_item.xml" value="0.22098569157392686" />
         <entry key="app/src/main/res/layout-land/restaurant_list_item_drag.xml" value="0.39791666666666664" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_restaurants.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/fragment_restaurant_detail.xml" value="0.2551928783382789" />
-        <entry key="app/src/main/res/layout/fragment_restaurant_list.xml" value="0.1140625" />
+        <entry key="app/src/main/res/layout/fragment_restaurant_list.xml" value="0.23404255319148937" />
         <entry key="app/src/main/res/layout/fragment_saved_restaurant_list.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/layout/nav_header.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/restaurant_list_item.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/restaurant_list_item_drag.xml" value="0.23020833333333332" />
-        <entry key="app/src/main/res/menu/menu_search.xml" value="0.1140625" />
+        <entry key="app/src/main/res/layout/toolbar.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/menu/drawer_view.xml" value="0.23020833333333332" />
+        <entry key="app/src/main/res/menu/menu_search.xml" value="0.37824874054213575" />
       </map>
     </option>
   </component>

@@ -1,61 +1,129 @@
 package compioneerx1.httpsgithub.myrestaurants.ui;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import org.parceler.Parcels;
-import java.util.ArrayList;
-import compioneerx1.httpsgithub.myrestaurants.Constants;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import com.google.android.material.navigation.NavigationView;
 import compioneerx1.httpsgithub.myrestaurants.R;
-import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
-import compioneerx1.httpsgithub.myrestaurants.util.OnRestaurantSelectedListener;
 
-public class RestaurantListActivity extends AppCompatActivity implements OnRestaurantSelectedListener{
-    private Integer mPosition;
-    ArrayList<Restaurant> mRestaurants;
-    String mSource;
+public class RestaurantListActivity extends AppCompatActivity {
 
-       @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurants);
-           if (savedInstanceState != null) {
-               if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                   mPosition = savedInstanceState.getInt(Constants.EXTRA_KEY_POSITION);
-                   mRestaurants = Parcels.unwrap(savedInstanceState.getParcelable(Constants.EXTRA_KEY_RESTAURANTS));
-                   mSource = savedInstanceState.getString(Constants.KEY_SOURCE);
 
-                   if (mPosition != null && mRestaurants != null) {
-                       Intent intent = new Intent(this, RestaurantDetailActivity.class);
-                       intent.putExtra(Constants.EXTRA_KEY_POSITION, mPosition);
-                       intent.putExtra(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mRestaurants));
-                       intent.putExtra(Constants.KEY_SOURCE, mSource);
-                       startActivity(intent);
-                   }
+        // Set a Toolbar to replace the ActionBar.
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-               }
+        // Find our drawer view
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
 
-           }
+        // Setup toggle to display hamburger icon with nice animation
+        drawerToggle.setDrawerIndicatorEnabled(false);
+        drawerToggle.syncState();
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.addDrawerListener(drawerToggle);
+
+        // Find our drawer view
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        // Setup drawer view
+        setupDrawerContent(nvDrawer);
+        setupInitialFragment();
+
+    }
+
+    private void setupInitialFragment() {
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, new RestaurantListFragment()).commit();
+
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
 
-        if (mPosition != null && mRestaurants != null) {
-            outState.putInt(Constants.EXTRA_KEY_POSITION, mPosition);
-            outState.putParcelable(Constants.EXTRA_KEY_RESTAURANTS, Parcels.wrap(mRestaurants));
-            outState.putString(Constants.KEY_SOURCE, mSource);
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
+        // and will not render the hamburger icon without it.
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the fragment to show based on nav item clicked
+        Fragment fragment = null;
+        Class fragmentClass;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_Favourite_fragment:
+                toolbar.setVisibility(View.GONE);
+                fragmentClass = SavedRestaurantListFragment.class;
+                break;
+            default:
+                toolbar.setVisibility(View.VISIBLE);
+                fragmentClass = RestaurantListFragment.class;
         }
 
-    }
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    @Override
-    public void onRestaurantSelected(Integer position, ArrayList<Restaurant> restaurants, String source) {
-        mPosition = position;
-        mRestaurants = restaurants;
-        mSource = source;
-    }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
+        // Highlight the selected item has been done by NavigationView
+        menuItem.setChecked(true);
+        // Set action bar title
+        setTitle(menuItem.getTitle());
+        // Close the navigation drawer
+        mDrawer.closeDrawers();
+    }
 }

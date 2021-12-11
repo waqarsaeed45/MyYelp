@@ -1,17 +1,20 @@
 package compioneerx1.httpsgithub.myrestaurants.ui;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.ContentValues;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -20,12 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import compioneerx1.httpsgithub.myrestaurants.Constants;
 import compioneerx1.httpsgithub.myrestaurants.R;
 import compioneerx1.httpsgithub.myrestaurants.adapters.RestaurantListAdapter;
+import compioneerx1.httpsgithub.myrestaurants.database.DBManager;
 import compioneerx1.httpsgithub.myrestaurants.models.Restaurant;
 import compioneerx1.httpsgithub.myrestaurants.services.YelpService;
 import compioneerx1.httpsgithub.myrestaurants.util.OnRestaurantSelectedListener;
@@ -36,26 +40,21 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RestaurantListFragment extends Fragment {
+public class RestaurantListFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    private RestaurantListAdapter mAdapter;
-    public ArrayList<Restaurant> mRestaurants = new ArrayList<>();
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
-    private String mRecentAddress;
-    private OnRestaurantSelectedListener mOnRestaurantSelectedListener;
+    @BindView(R.id.filterSpinner)
+    Spinner mFilterSpinner;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mOnRestaurantSelectedListener = (OnRestaurantSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + e.getMessage());
-        }
-    }
+    private RestaurantListAdapter mAdapter;
+    public List<Restaurant> mRestaurants = new ArrayList<>();
+
+
+    DBManager dbManager;
+
+    String[] filters = {"Price", "Ratings"};
+
 
     public RestaurantListFragment() {
         // Required empty public constructor
@@ -64,12 +63,8 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mEditor = mSharedPreferences.edit();
-
-        // Instructs fragment to include menu options:
         setHasOptionsMenu(true);
+        dbManager = new DBManager(requireContext(), null, null, 1);
     }
 
     @Override
@@ -78,18 +73,97 @@ public class RestaurantListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         ButterKnife.bind(this, view);
 
-        mRecentAddress = mSharedPreferences.getString(Constants.PREFERENCES_LOCATION_KEY, null);
+        //code for spinner
+        mFilterSpinner.setOnItemSelectedListener(this);
+        ArrayAdapter ad
+                = new ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                filters);
+        mFilterSpinner.setAdapter(ad);
 
-        if (mRecentAddress != null) {
-            getRestaurants(mRecentAddress);
-        }
+        //*******ends*******
 
+        getRestaurants("");
         return view;
     }
 
+    private void getRestaurants(String category) {
+        final YelpService yelpService = new YelpService();
+
+        yelpService.findRestaurants(category, new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                mRestaurants = yelpService.processResults(response);
+
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mAdapter = new RestaurantListAdapter(getActivity(), mRestaurants, new OnRestaurantSelectedListener() {
+                            @Override
+                            public void onRestaurantSelected(Integer position, List<Restaurant> restaurants, String source) {
+                                showFavDialog(restaurants.get(position));
+                            }
+                        });
+                        mRecyclerView.setAdapter(mAdapter);
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        mRecyclerView.setHasFixedSize(true);
+                    }
+                });
+            }
+        });
+    }
+
+    void showFavDialog(Restaurant restaurant) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add to favourite?")
+                .setMessage("Do you want to add this item to favourites?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    insertToDBAsFav(restaurant);
+
+                })
+                .setNegativeButton("No", (dialog, id) -> {
+                    Toast.makeText(getContext(), "clicked = " + restaurant.getName(), Toast.LENGTH_SHORT).show();
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void insertToDBAsFav(Restaurant restaurant) {
+
+        ContentValues values = new ContentValues();
+        values.put("name", restaurant.getName());
+        values.put("phone", restaurant.getPhone());
+        values.put("website", restaurant.getWebsite());
+        values.put("rating", restaurant.getRating());
+        values.put("imageUrl", restaurant.getImageUrl());
+        values.put("price", restaurant.getPrice());
+        values.put("address", restaurant.getAddress().toString());
+        values.put("latitude", restaurant.getLatitude());
+        values.put("longitude", restaurant.getLongitude());
+        values.put("categories", restaurant.getCategories().toString());
+        values.put("pushId", restaurant.getPushId());
+        long check = dbManager.Insert(values);
+        if (check == 0) {
+            Toast.makeText(requireContext(), "record not inserted is = " + check + "", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(requireContext(), "record inserted ID is = " + check + "", Toast.LENGTH_LONG).show();
+
+        }
+    }
 
     @Override
-    // Method is now void, menu inflater is now passed in as argument:
+// Method is now void, menu inflater is now passed in as argument:
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         // Call super to inherit method from parent:
@@ -99,12 +173,12 @@ public class RestaurantListFragment extends Fragment {
 
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                addToSharedPreferences(query);
                 getRestaurants(query);
                 return false;
             }
@@ -121,36 +195,51 @@ public class RestaurantListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getRestaurants(String location) {
-        final YelpService yelpService = new YelpService();
 
-        yelpService.findRestaurants(location, new Callback() {
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) {
-                mRestaurants = yelpService.processResults(response);
-
-                getActivity().runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        mAdapter = new RestaurantListAdapter(getActivity(), mRestaurants, mOnRestaurantSelectedListener);
-                        mRecyclerView.setAdapter(mAdapter);
-                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                        mRecyclerView.setLayoutManager(layoutManager);
-                        mRecyclerView.setHasFixedSize(true);
-                    }
-                });
-            }
-        });
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (filters[position].equals("Price")) {
+            sortByPrice();
+        } else if (filters[position].equals("Ratings")) {
+            sortByRatings();
+        }
     }
 
-    private void addToSharedPreferences(String location) {
-        mEditor.putString(Constants.PREFERENCES_LOCATION_KEY, location).apply();
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+    private void sortByPrice() {
+        for (int c = 0; c < (mRestaurants.size() - 1); c++) {
+            for (int d = 0; d < mRestaurants.size() - c - 1; d++) {
+                if (mRestaurants.get(d).getPrice().length() >
+                        mRestaurants.get(d + 1).getPrice().length() || mRestaurants.get(d + 1).getPrice().length() == 0) /* For descending order use < */ {
+                    Restaurant swap = new Restaurant();
+                    swap = mRestaurants.get(d);
+                    mRestaurants.set(d, mRestaurants.get(d + 1));
+                    mRestaurants.set(d + 1, swap);
+                }
+            }
+        }
+        if (mAdapter != null)
+            mAdapter.notifyDataSetChanged();
+    }
+
+    private void sortByRatings() {
+        for (int c = 0; c < (mRestaurants.size() - 1); c++) {
+            for (int d = 0; d < mRestaurants.size() - c - 1; d++) {
+                if (mRestaurants.get(d).getRating() <
+                        mRestaurants.get(d + 1).getRating()) /* For descending order use < */ {
+                    Restaurant swap = new Restaurant();
+                    swap = mRestaurants.get(d);
+                    mRestaurants.set(d, mRestaurants.get(d + 1));
+                    mRestaurants.set(d + 1, swap);
+                }
+            }
+        }
+        if (mAdapter != null)
+            mAdapter.notifyDataSetChanged();
     }
 }

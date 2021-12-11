@@ -4,6 +4,7 @@
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="always"
+        android:enabled="true"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="Search">
     </item>
