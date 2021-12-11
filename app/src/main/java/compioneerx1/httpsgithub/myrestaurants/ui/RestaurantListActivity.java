@@ -105,7 +105,7 @@ public class RestaurantListActivity extends AppCompatActivity {
                 fragmentClass = SavedRestaurantListFragment.class;
                 break;
             default:
-                toolbar.setVisibility(View.VISIBLE);
+                toolbar.setVisibility(View.GONE);
                 fragmentClass = RestaurantListFragment.class;
         }
 

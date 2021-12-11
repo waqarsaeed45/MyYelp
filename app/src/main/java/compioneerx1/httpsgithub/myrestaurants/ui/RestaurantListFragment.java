@@ -3,17 +3,22 @@ package compioneerx1.httpsgithub.myrestaurants.ui;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
@@ -46,6 +51,9 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
 
     @BindView(R.id.filterSpinner)
     Spinner mFilterSpinner;
+
+    @BindView(R.id.etSearch)
+    EditText etSearch;
 
     private RestaurantListAdapter mAdapter;
     public List<Restaurant> mRestaurants = new ArrayList<>();
@@ -86,6 +94,39 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
 
         getRestaurants("");
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initListners();
+    }
+
+    private void initListners() {
+
+        etSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        etSearch.setText("");
+                        return true;
+                    }
+                    if (event.getRawX() >= (etSearch.getLeft() - etSearch.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
+                        // your action here
+                        getRestaurants(etSearch.getText().toString());
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private void getRestaurants(String category) {
@@ -162,38 +203,38 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    @Override
-// Method is now void, menu inflater is now passed in as argument:
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        // Call super to inherit method from parent:
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.menu_search, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                getRestaurants(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//// Method is now void, menu inflater is now passed in as argument:
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//
+//        // Call super to inherit method from parent:
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        inflater.inflate(R.menu.menu_search, menu);
+//
+//        MenuItem menuItem = menu.findItem(R.id.action_search);
+//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+//        searchView.setMaxWidth(Integer.MAX_VALUE);
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                getRestaurants(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     @Override

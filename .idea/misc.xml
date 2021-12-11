@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-xhdpi/ic_close_black.xml" value="0.16944444444444445" />
+        <entry key="app/src/main/res/drawable-xhdpi/ic_search_black.xml" value="0.16944444444444445" />
+        <entry key="app/src/main/res/drawable/gradient_spinner.xml" value="10.0" />
         <entry key="app/src/main/res/drawable/texfield_searchview_holo_light.xml" value="0.16944444444444445" />
         <entry key="app/src/main/res/layout-land/activity_restaurants.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout-land/fragment_restaurant_detail.xml" value="0.2734375" />
