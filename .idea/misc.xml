@@ -4,12 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-xhdpi-v21/bg_spinner_field_white.xml" value="0.16944444444444445" />
+        <entry key="app/src/main/res/drawable-xhdpi/bg_spinner_field_white.xml" value="0.16944444444444445" />
         <entry key="app/src/main/res/drawable-xhdpi/ic_close_black.xml" value="0.16944444444444445" />
         <entry key="app/src/main/res/drawable-xhdpi/ic_search_black.xml" value="0.16944444444444445" />
         <entry key="app/src/main/res/drawable/gradient_spinner.xml" value="10.0" />
         <entry key="app/src/main/res/drawable/texfield_searchview_holo_light.xml" value="0.16944444444444445" />
         <entry key="app/src/main/res/layout-land/activity_restaurants.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout-land/fragment_restaurant_detail.xml" value="0.2734375" />
+        <entry key="app/src/main/res/layout-land/fragment_restaurant_list.xml" value="0.35052083333333334" />
+        <entry key="app/src/main/res/layout-land/fragment_saved_restaurant_list.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/layout-land/restaurant_list_item.xml" value="0.22098569157392686" />
         <entry key="app/src/main/res/layout-land/restaurant_list_item_drag.xml" value="0.39791666666666664" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:elevation="4dp"
     android:layout_marginBottom="5dp"
     android:orientation="horizontal">
 
@@ -12,7 +14,7 @@
         android:layout_weight="1"
         android:background="#ffffff"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/restaurantNameTextView"
@@ -94,6 +96,8 @@
         android:id="@+id/restaurantImageView"
         android:layout_width="130dp"
         android:layout_height="130dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:scaleType="centerCrop"
         android:src="@drawable/fooddefault" />
 </LinearLayout>

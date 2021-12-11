@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -52,6 +53,9 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
     @BindView(R.id.filterSpinner)
     Spinner mFilterSpinner;
 
+    @BindView(R.id.llSpinner)
+    LinearLayout llSpinner;
+
     @BindView(R.id.etSearch)
     EditText etSearch;
 
@@ -81,6 +85,7 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         ButterKnife.bind(this, view);
 
+
         //code for spinner
         mFilterSpinner.setOnItemSelectedListener(this);
         ArrayAdapter ad
@@ -103,6 +108,14 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
     }
 
     private void initListners() {
+
+        llSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFilterSpinner.performClick();
+            }
+        });
+
 
         etSearch.setOnTouchListener(new View.OnTouchListener() {
             @Override
