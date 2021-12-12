@@ -48,7 +48,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     @Override
     public void onBindViewHolder(RestaurantListAdapter.RestaurantViewHolder holder, int position) {
-        holder.bindRestaurant(mRestaurants.get(position));
+        holder.bindRestaurant(mRestaurants.get(position),position+1);
     }
 
     @Override
@@ -90,15 +90,14 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
         }
 
-        public void bindRestaurant(Restaurant restaurant) {
+        public void bindRestaurant(Restaurant restaurant, int position) {
 
-          //  String imageUrl = addChar(restaurant.getImageUrl(), '/', restaurant.getImageUrl().length() - 5);
             Picasso.with(mContext)
                     .load(restaurant.getImageUrl())
                     .resize(MAX_WIDTH, MAX_HEIGHT)
                     .centerCrop()
                     .into(mRestaurantImageView);
-            mNameTextView.setText(restaurant.getName());
+            mNameTextView.setText(position+" "+restaurant.getName());
             if (restaurant.getPrice().isEmpty()) {
                 mPriceTextView.setVisibility(View.GONE);
             }

@@ -18,7 +18,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/secondary_background"
+            android:background="@drawable/bg_round_white"
             android:drawableLeft="@drawable/ic_search_black"
             android:drawableRight="@drawable/ic_close_black"
             android:drawablePadding="8dp"
@@ -59,6 +59,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

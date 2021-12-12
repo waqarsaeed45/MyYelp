@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,7 +64,7 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
 
     DBManager dbManager;
 
-    String[] filters = {"Price", "Ratings"};
+    String[] filters = {"Rating", "Price"};
 
 
     public RestaurantListFragment() {
@@ -186,7 +185,6 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
 
                 })
                 .setNegativeButton("No", (dialog, id) -> {
-                    Toast.makeText(getContext(), "clicked = " + restaurant.getName(), Toast.LENGTH_SHORT).show();
                 });
         AlertDialog alert = builder.create();
         alert.show();
@@ -208,10 +206,10 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
         values.put("pushId", restaurant.getPushId());
         long check = dbManager.Insert(values);
         if (check == 0) {
-            Toast.makeText(requireContext(), "record not inserted is = " + check + "", Toast.LENGTH_LONG).show();
+       //     Toast.makeText(requireContext(), "record not inserted is = " + check + "", Toast.LENGTH_LONG).show();
 
         } else {
-            Toast.makeText(requireContext(), "record inserted ID is = " + check + "", Toast.LENGTH_LONG).show();
+        //    Toast.makeText(requireContext(), "record inserted ID is = " + check + "", Toast.LENGTH_LONG).show();
 
         }
     }
@@ -254,7 +252,7 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (filters[position].equals("Price")) {
             sortByPrice();
-        } else if (filters[position].equals("Ratings")) {
+        } else if (filters[position].equals("Rating")) {
             sortByRatings();
         }
     }

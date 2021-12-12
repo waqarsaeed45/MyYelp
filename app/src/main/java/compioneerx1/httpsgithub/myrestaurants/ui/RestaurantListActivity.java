@@ -1,5 +1,6 @@
 package compioneerx1.httpsgithub.myrestaurants.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -97,33 +98,37 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
-        Fragment fragment = null;
-        Class fragmentClass;
+
         switch (menuItem.getItemId()) {
             case R.id.nav_Favourite_fragment:
-                toolbar.setVisibility(View.GONE);
-                fragmentClass = SavedRestaurantListFragment.class;
+                mDrawer.closeDrawers();
+                Intent i = new Intent(getApplicationContext(), SavedRestaurantListActivity.class);
+                startActivity(i);
+                // toolbar.setVisibility(View.GONE);
+               // fragmentClass = SavedRestaurantListFragment.class;
                 break;
             default:
                 toolbar.setVisibility(View.GONE);
+                  Fragment fragment = null;
+                  Class fragmentClass;
                 fragmentClass = RestaurantListFragment.class;
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fragmentManager.beginTransaction().replace(R.id.flContent,fragment ).commit();
+
+                // Highlight the selected item has been done by NavigationView
+                menuItem.setChecked(true);
+                // Set action bar title
+                setTitle(menuItem.getTitle());
+                // Close the navigation drawer
+                mDrawer.closeDrawers();
         }
-
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
-        // Set action bar title
-        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
-        mDrawer.closeDrawers();
     }
 }
