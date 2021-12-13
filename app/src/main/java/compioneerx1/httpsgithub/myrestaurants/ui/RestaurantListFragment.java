@@ -2,8 +2,10 @@ package compioneerx1.httpsgithub.myrestaurants.ui;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,11 +13,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +37,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import compioneerx1.httpsgithub.myrestaurants.NDSpinner;
 import compioneerx1.httpsgithub.myrestaurants.R;
 import compioneerx1.httpsgithub.myrestaurants.adapters.RestaurantListAdapter;
 import compioneerx1.httpsgithub.myrestaurants.database.DBManager;
@@ -50,7 +56,7 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
     RecyclerView mRecyclerView;
 
     @BindView(R.id.filterSpinner)
-    Spinner mFilterSpinner;
+    NDSpinner mFilterSpinner;
 
     @BindView(R.id.llSpinner)
     LinearLayout llSpinner;
@@ -94,6 +100,7 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
                 filters);
         mFilterSpinner.setAdapter(ad);
 
+
         //*******ends*******
 
         getRestaurants("");
@@ -112,6 +119,22 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
             @Override
             public void onClick(View v) {
                 mFilterSpinner.performClick();
+            }
+        });
+
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    getRestaurants(etSearch.getText().toString());
+                    InputMethodManager in = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    }
+                    in.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -154,6 +177,7 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
             @Override
             public void onResponse(Call call, Response response) {
                 mRestaurants = yelpService.processResults(response);
+
 
                 getActivity().runOnUiThread(new Runnable() {
 
@@ -205,54 +229,16 @@ public class RestaurantListFragment extends Fragment implements AdapterView.OnIt
         values.put("categories", restaurant.getCategories().toString());
         values.put("pushId", restaurant.getPushId());
         long check = dbManager.Insert(values);
-        if (check == 0) {
-       //     Toast.makeText(requireContext(), "record not inserted is = " + check + "", Toast.LENGTH_LONG).show();
 
-        } else {
-        //    Toast.makeText(requireContext(), "record inserted ID is = " + check + "", Toast.LENGTH_LONG).show();
-
-        }
     }
-
-//    @Override
-//// Method is now void, menu inflater is now passed in as argument:
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//
-//        // Call super to inherit method from parent:
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        inflater.inflate(R.menu.menu_search, menu);
-//
-//        MenuItem menuItem = menu.findItem(R.id.action_search);
-//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-//        searchView.setMaxWidth(Integer.MAX_VALUE);
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                getRestaurants(query);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        return super.onOptionsItemSelected(item);
-//    }
 
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (filters[position].equals("Price")) {
+
+        if (position == 1) {
             sortByPrice();
-        } else if (filters[position].equals("Rating")) {
+        } else {
             sortByRatings();
         }
     }

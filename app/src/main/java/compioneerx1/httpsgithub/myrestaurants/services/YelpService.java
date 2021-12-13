@@ -25,8 +25,8 @@ public class YelpService {
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL).newBuilder();
-        urlBuilder.addQueryParameter("categories",category);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.YELP_BASE_URL+"&term="+category).newBuilder();
+        //urlBuilder.addQueryParameter("categories",category);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()

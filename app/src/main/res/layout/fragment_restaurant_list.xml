@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <Spinner
+        <compioneerx1.httpsgithub.myrestaurants.NDSpinner
             android:id="@+id/filterSpinner"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
@@ -54,7 +54,6 @@
             android:hint="Sort By"
             android:spinnerMode="dialog"
             android:textAlignment="center" />
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
